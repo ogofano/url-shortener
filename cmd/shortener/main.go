@@ -10,7 +10,7 @@ import (
 
 var data map[string]string
 
-func shortUrl() string {
+func shortURL() string {
 	var short string
 	alph := "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
 	for i := 0; i != 8; i++ {
@@ -23,17 +23,17 @@ func shortUrl() string {
 func handler(res http.ResponseWriter, req *http.Request) {
 	url := req.URL.String()
 	if url == "/" {
-		createShortUrl(res, req)
+		createShortURL(res, req)
 		return
 	} else if len(url) == 9 {
-		getUrl(res, req, url)
+		getURL(res, req, url)
 		return
 	} else {
 		res.WriteHeader(http.StatusBadRequest)
 	}
 }
 
-func createShortUrl(res http.ResponseWriter, req *http.Request) {
+func createShortURL(res http.ResponseWriter, req *http.Request) {
 	pattern := regexp.MustCompile(`^https?:\/\/[\w.-]+(?:\/[\w\/_.?=%&-]+)?$`)
 	if req.Method != http.MethodPost || req.Header.Get("Content-Type") != "text/plain" {
         http.Error(res, "Expected a POST request with Content-Type: text/plain", http.StatusBadRequest)
@@ -46,19 +46,19 @@ func createShortUrl(res http.ResponseWriter, req *http.Request) {
 	}
 	url := string(body)
 	if !pattern.MatchString(url) {
-		http.Error(res, "Invalid url", http.StatusBadRequest)
+		http.Error(res, "Invalid URL", http.StatusBadRequest)
 		return
 	}
 	
 	localhost := "http://localhost:8080/"
-	shorten := shortUrl()
+	shorten := shortURL()
 	data["/" + shorten] = url
 	res.WriteHeader(http.StatusCreated)
 	res.Header().Add("Content-Type", "text/plain")
 	fmt.Fprint(res, localhost + shorten)
 }
 
-func getUrl(res http.ResponseWriter, req *http.Request, url string) {
+func getURL(res http.ResponseWriter, req *http.Request, url string) {
 	if req.Method != http.MethodGet {
 		http.Error(res, "Expected a GET request with Content-Type: text/plain", http.StatusBadRequest)
 		return
