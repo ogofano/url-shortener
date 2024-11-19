@@ -60,7 +60,7 @@ func createShortURL(res http.ResponseWriter, req *http.Request) {
 }
 
 func getURL(res http.ResponseWriter, req *http.Request, url string) {
-	if req.Method != http.MethodGet || !strings.Contains(req.Header.Get("Content-Type"), "text/plain") {
+	if req.Method != http.MethodGet {
 		http.Error(res, "Expected a GET request with Content-Type: text/plain", http.StatusBadRequest)
 		return
 	}
