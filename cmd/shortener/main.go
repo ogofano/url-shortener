@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 var data map[string]string
@@ -35,7 +36,7 @@ func handler(res http.ResponseWriter, req *http.Request) {
 
 func createShortURL(res http.ResponseWriter, req *http.Request) {
 	pattern := regexp.MustCompile(`^https?:\/\/[\w.-]+(?:\/[\w\/_.?=%&-]+)?$`)
-	if req.Method != http.MethodPost || req.Header.Get("Content-Type") != "text/plain" {
+	if req.Method != http.MethodPost || !strings.Contains(req.Header.Get("Content-Type"), "text/plain") {
         http.Error(res, "Expected a POST request with Content-Type: text/plain", http.StatusBadRequest)
         return
     }
@@ -59,7 +60,7 @@ func createShortURL(res http.ResponseWriter, req *http.Request) {
 }
 
 func getURL(res http.ResponseWriter, req *http.Request, url string) {
-	if req.Method != http.MethodGet {
+	if req.Method != http.MethodGet || !strings.Contains(req.Header.Get("Content-Type"), "text/plain") {
 		http.Error(res, "Expected a GET request with Content-Type: text/plain", http.StatusBadRequest)
 		return
 	}
