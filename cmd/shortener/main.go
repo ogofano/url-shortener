@@ -23,10 +23,11 @@ func shortURL() string {
 
 func handler(res http.ResponseWriter, req *http.Request) {
 	url := req.URL.String()
+	shortLinkPattern := regexp.MustCompile(`^\/[a-zA-Z0-9]{8}$`)
 	if url == "/" {
 		createShortURL(res, req)
 		return
-	} else if len(url) == 9 {
+	} else if shortLinkPattern.MatchString(url) {
 		getURL(res, req, url)
 		return
 	} else {
