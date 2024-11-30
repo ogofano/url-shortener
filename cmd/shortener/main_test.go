@@ -50,6 +50,7 @@ func TestHandler(t *testing.T) {
 			
 			handler(w, req)
 			res := w.Result()
+			defer res.Body.Close()
 
 			assert.Equal(t, res.StatusCode, test.want)
 		})
